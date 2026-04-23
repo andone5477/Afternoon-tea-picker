@@ -5,121 +5,121 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>下午茶抽選機</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;700;900&display=swap');
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #fff8f2;
+      --bg2: #ffe5cc;
+      --card: #ffffff;
+      --accent: #f4a261;
+      --accent2: #e76f51;
+      --chip-on: #1c1c1c;
+      --text: #1c1c1c;
+      --muted: #888;
+      --border: #e8e8e8;
+      --item-bg: #fef6ee;
+      --shadow: 0 4px 24px rgba(0,0,0,.09);
+    }
 
     body {
       min-height: 100vh;
-      background: linear-gradient(145deg, #fff8f2 0%, #ffe5cc 100%);
-      font-family: 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      background: linear-gradient(145deg, var(--bg) 0%, var(--bg2) 100%);
+      font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px 14px 48px;
-      color: #1c1c1c;
+      padding: 28px 14px 60px;
+      color: var(--text);
     }
 
-    h1 { font-size: 1.8rem; margin-bottom: 2px; }
-    .subtitle { font-size: .85rem; color: #777; margin-bottom: 20px; }
+    /* ── Header ── */
+    .header { text-align: center; margin-bottom: 24px; }
+    .header h1 { font-size: 2rem; font-weight: 900; letter-spacing: -.5px; }
+    .header p  { font-size: .85rem; color: var(--muted); margin-top: 4px; }
 
     /* ── Card ── */
     .card {
-      background: #fff;
+      background: var(--card);
       border-radius: 20px;
-      box-shadow: 0 4px 24px rgba(0,0,0,.1);
+      box-shadow: var(--shadow);
       padding: 20px;
       width: 100%;
       max-width: 440px;
       margin-bottom: 14px;
     }
     .card-title {
-      font-size: .9rem;
+      font-size: .88rem;
       font-weight: 700;
-      color: #545454;
+      color: #555;
       margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .ue-badge {
-      background: #06C167;
-      color: #fff;
-      font-size: .68rem;
-      font-weight: 800;
-      padding: 2px 7px;
-      border-radius: 5px;
-      letter-spacing: .5px;
     }
 
-    /* ── Uber Eats–style category chips ── */
+    /* ── Filter chips ── */
     .chips-row {
       display: flex;
       gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-      scrollbar-width: none;
+      flex-wrap: wrap;
     }
-    .chips-row::-webkit-scrollbar { display: none; }
-
     .chip {
-      flex-shrink: 0;
       display: flex;
-      flex-direction: column;
       align-items: center;
       gap: 5px;
-      width: 76px;
-      padding: 10px 4px 8px;
-      border: 2px solid #e2e2e2;
-      border-radius: 14px;
+      padding: 6px 13px;
+      border: 2px solid var(--border);
+      border-radius: 999px;
       cursor: pointer;
       background: #fff;
-      transition: border-color .15s, background .15s, color .15s;
+      font-size: .78rem;
+      font-weight: 600;
+      transition: all .15s;
       user-select: none;
     }
     .chip:hover { border-color: #bbb; }
     .chip.on {
-      background: #1c1c1c;
-      border-color: #1c1c1c;
+      background: var(--chip-on);
+      border-color: var(--chip-on);
       color: #fff;
     }
-    .chip-icon { font-size: 1.6rem; line-height: 1; }
-    .chip-label { font-size: .72rem; font-weight: 600; text-align: center; line-height: 1.2; }
+    .chip-icon { font-size: 1rem; }
 
-    .btn-ue {
+    .btn-pick {
       width: 100%;
       margin-top: 14px;
       padding: 14px;
       border: none;
-      border-radius: 12px;
-      background: #06C167;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
       color: #fff;
-      font-size: 1rem;
-      font-weight: 700;
+      font-size: 1.05rem;
+      font-weight: 800;
+      font-family: inherit;
       cursor: pointer;
-      transition: opacity .15s;
+      box-shadow: 0 4px 14px rgba(231,111,81,.35);
+      transition: transform .1s, opacity .15s;
+      letter-spacing: .5px;
     }
-    .btn-ue:hover { opacity: .88; }
-    .btn-ue:disabled { opacity: .45; cursor: not-allowed; }
+    .btn-pick:active  { transform: scale(.97); }
+    .btn-pick:disabled { opacity: .4; cursor: not-allowed; box-shadow: none; }
 
-    /* ── Slot Machine ── */
-    .slot-win {
+    /* ── Slot machine ── */
+    .slot-wrap {
       width: 100%;
       height: 82px;
-      background: #fef6ee;
-      border: 3px solid #f4a261;
+      background: var(--item-bg);
+      border: 3px solid var(--accent);
       border-radius: 14px;
       overflow: hidden;
       position: relative;
     }
-    .slot-win::before, .slot-win::after {
+    .slot-wrap::before, .slot-wrap::after {
       content: '';
-      position: absolute;
-      left: 0; right: 0;
-      height: 22px;
-      z-index: 2;
-      pointer-events: none;
+      position: absolute; left: 0; right: 0;
+      height: 24px; z-index: 2; pointer-events: none;
     }
-    .slot-win::before { top: 0;    background: linear-gradient(to bottom, #fef6ee, transparent); }
-    .slot-win::after  { bottom: 0; background: linear-gradient(to top,   #fef6ee, transparent); }
+    .slot-wrap::before { top: 0;    background: linear-gradient(to bottom, var(--item-bg), transparent); }
+    .slot-wrap::after  { bottom: 0; background: linear-gradient(to top,   var(--item-bg), transparent); }
 
     .slot-reel {
       display: flex;
@@ -133,52 +133,35 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
-      font-weight: 600;
-      padding: 0 12px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      padding: 0 14px;
       text-align: center;
       flex-shrink: 0;
+      color: #555;
     }
-    .slot-item.win { color: #e76f51; font-size: 1.15rem; }
+    .slot-item.win { color: var(--accent2); font-size: 1.2rem; }
 
     .result-line {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #e76f51;
-      min-height: 30px;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--accent2);
+      min-height: 32px;
       text-align: center;
+      letter-spacing: .5px;
     }
 
-    .btn-spin {
-      width: 100%;
-      padding: 15px;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #f4a261, #e76f51);
-      color: #fff;
-      font-size: 1.2rem;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 4px 14px rgba(231,111,81,.4);
-      transition: transform .1s;
-    }
-    .btn-spin:active { transform: scale(.97); }
-    .btn-spin:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
-
-    /* ── Store List ── */
+    /* ── Store list ── */
     .panel-head {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
     }
     .panel-head span:first-child { font-weight: 700; font-size: .95rem; }
     .count-dot {
-      background: #f4a261;
+      background: var(--accent);
       color: #fff;
       border-radius: 999px;
       padding: 1px 10px;
-      font-size: .8rem;
+      font-size: .78rem;
       font-weight: 700;
     }
 
@@ -186,313 +169,241 @@
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
       max-height: 380px;
       overflow-y: auto;
     }
     #store-list::-webkit-scrollbar { width: 5px; }
-    #store-list::-webkit-scrollbar-thumb { background: #f4a261; border-radius: 99px; }
+    #store-list::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 99px; }
 
     .sitem {
       display: flex;
       align-items: center;
       gap: 10px;
       padding: 10px 12px;
-      background: #fef6ee;
+      background: var(--item-bg);
       border-radius: 10px;
       transition: opacity .2s;
     }
-    .sitem.ex { opacity: .35; text-decoration: line-through; }
+    .sitem.ex { opacity: .32; text-decoration: line-through; }
     .sinfo { flex: 1; min-width: 0; }
     .sname {
-      font-size: .92rem;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: .9rem; font-weight: 600;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .smeta { font-size: .73rem; color: #999; margin-top: 2px; }
+    .smeta { font-size: .72rem; color: var(--muted); margin-top: 2px; }
     .btn-ex {
       flex-shrink: 0;
       background: none;
       border: 1.5px solid #ccc;
       border-radius: 8px;
       padding: 3px 10px;
-      font-size: .73rem;
+      font-size: .72rem;
+      font-family: inherit;
       cursor: pointer;
       color: #888;
       transition: all .15s;
       white-space: nowrap;
     }
-    .sitem.ex .btn-ex { border-color: #f4a261; color: #f4a261; }
+    .sitem.ex .btn-ex { border-color: var(--accent); color: var(--accent); }
 
-    /* ── Status ── */
-    #status {
-      font-size: .88rem;
-      color: #888;
-      text-align: center;
-      padding: 6px 0;
+    /* ── Reset link ── */
+    .reset-link {
+      font-size: .78rem;
+      color: var(--muted);
+      text-align: right;
+      margin-top: 6px;
+      cursor: pointer;
+      text-decoration: underline;
     }
-    .spin-loader {
-      display: inline-block;
-      width: 16px; height: 16px;
-      border: 3px solid #06C16740;
-      border-top-color: #06C167;
-      border-radius: 50%;
-      animation: rot .65s linear infinite;
-      vertical-align: middle;
-      margin-right: 5px;
-    }
-    @keyframes rot { to { transform: rotate(360deg); } }
-    .err { color: #c00; }
-    .err-box {
-      background: #fff3f3;
-      border: 1px solid #fbb;
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-size: .82rem;
-      color: #b00;
-      text-align: center;
-    }
+    .reset-link:hover { color: var(--accent2); }
   </style>
 </head>
 <body>
 
-<h1>🧋 下午茶抽選機</h1>
-<p class="subtitle">從 Uber Eats 附近店家中讓老天幫你決定！</p>
-
-<!-- ① Category chips -->
-<div class="card">
-  <div class="card-title">
-    選擇類型
-    <span class="ue-badge">Uber Eats</span>
-  </div>
-  <div class="chips-row" id="chips"></div>
-  <button class="btn-ue" id="btn-search">🔍 搜尋附近 10 公里</button>
+<div class="header">
+  <h1>🧋 下午茶抽選機</h1>
+  <p>選好類型，讓老天幫你決定今天喝什麼</p>
 </div>
 
-<!-- ② Slot machine -->
+<!-- ① Filter -->
+<div class="card">
+  <div class="card-title">選擇類型（可複選）</div>
+  <div class="chips-row" id="chips"></div>
+  <button class="btn-pick" id="btn-spin">🎰 幫我決定！</button>
+</div>
+
+<!-- ② Slot result -->
 <div class="card" style="display:flex;flex-direction:column;gap:14px;align-items:center;">
-  <div class="slot-win" style="width:100%">
+  <div class="slot-wrap" style="width:100%">
     <div class="slot-reel" id="slot-reel">
-      <div class="slot-item">搜尋後開始抽選</div>
+      <div class="slot-item">請先選類型，再按「幫我決定」</div>
     </div>
   </div>
   <div class="result-line" id="result-line"></div>
-  <button class="btn-spin" id="btn-spin" disabled>🎰 開始抽選</button>
 </div>
 
 <!-- ③ Store list -->
 <div class="card">
   <div class="panel-head">
-    <span>搜尋結果</span>
+    <span>店家清單</span>
     <span class="count-dot" id="cnt">0</span>
   </div>
-  <div id="status">請先選擇類型，再按「搜尋」</div>
   <ul id="store-list"></ul>
+  <div class="reset-link" id="btn-reset">↺ 取消所有排除</div>
 </div>
 
 <script>
-// ─── Category definitions ───────────────────────────────────────────────────
-const CATS = [
-  { id:'bubble_tea',    icon:'🧋', label:'手搖飲料', q:'手搖飲' },
-  { id:'coffee',        icon:'☕', label:'咖啡廳',   q:'咖啡' },
-  { id:'dessert',       icon:'🍰', label:'甜點點心', q:'甜點' },
-  { id:'afternoon_tea', icon:'🫖', label:'下午茶',   q:'下午茶' },
-  { id:'bakery',        icon:'🍞', label:'烘焙麵包', q:'烘焙' },
-  { id:'ice_cream',     icon:'🍦', label:'冰品',     q:'冰淇淋' },
-  { id:'juice',         icon:'🥤', label:'果汁飲品', q:'果汁' },
+// ─── Store data ────────────────────────────────────────────────────────────
+// tag: 0=全部, 1=連鎖品牌, 2=台式紅茶, 3=特色/精品
+const STORES = [
+  { name:'50嵐',              tag:1 },
+  { name:'清心福全',          tag:1 },
+  { name:'迷客夏 Milksha',    tag:1 },
+  { name:'可不可熟成紅茶',    tag:1 },
+  { name:'麻古茶坊',          tag:1 },
+  { name:'萬波島嶼紅茶',      tag:1 },
+  { name:'龜記茗品',          tag:1 },
+  { name:'五桐號',            tag:1 },
+  { name:'得正',              tag:1 },
+  { name:'Oolong Tea Project', tag:3 },
+  { name:'珍煮丹',            tag:1 },
+  { name:'一芳水果茶',        tag:1 },
+  { name:'康青龍',            tag:1 },
+  { name:'大苑子',            tag:1 },
+  { name:'老賴茶棧',          tag:2 },
+  { name:'抿茶 min cha',      tag:3 },
+  { name:'嵐天 skyline',      tag:3 },
+  { name:'再睡5分鐘',         tag:3 },
+  { name:'春陽茶事',          tag:1 },
+  { name:'茶湯會',            tag:1 },
+  { name:'鮮茶道',            tag:1 },
+  { name:'功夫茶 KUNGFUTEA',  tag:1 },
+  { name:'七盞茶',            tag:3 },
+  { name:'有飲 Youin',        tag:3 },
+  { name:'高記茶莊',          tag:2 },
+  { name:'明泉紅茶',          tag:2 },
+  { name:'蔡元益紅茶',        tag:2 },
+  { name:'四葉手作茶',        tag:3 },
+  { name:'森本木茶飲',        tag:3 },
+  { name:'紅茶媽媽',          tag:2 },
+  { name:'渡口茶飲',          tag:3 },
+  { name:'十盛',              tag:3 },
+  { name:'進發家',            tag:2 },
+  { name:'約翰紅茶公司',      tag:2 },
+  { name:'烏弄 UNOCHA',       tag:3 },
+  { name:'自在軒',            tag:3 },
+  { name:'布萊恩紅茶',        tag:2 },
+  { name:'鶴茶樓',            tag:3 },
+  { name:'叮哥茶飲',          tag:1 },
+  { name:'不要對我尖叫',      tag:3 },
 ];
 
-const CORS_PROXY = 'https://corsproxy.io/?';
-const MAX_KM     = 10;
+const CATS = [
+  { id: 0, icon: '🍵', label: '全部' },
+  { id: 1, icon: '🏪', label: '連鎖品牌' },
+  { id: 2, icon: '🍵', label: '台式紅茶' },
+  { id: 3, icon: '✨', label: '特色精品' },
+];
 
-let lat, lon;
-let stores   = [];   // {name, dist, cats:[], excluded}
-let selected = new Set(['bubble_tea', 'coffee', 'afternoon_tea']);
-let spinning = false;
+// ─── State ─────────────────────────────────────────────────────────────────
+let selectedTags = new Set([0]);
+let excluded     = new Set();
+let spinning     = false;
 
-// ─── Geolocation ───────────────────────────────────────────────────────────
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(
-    p => { lat = p.coords.latitude; lon = p.coords.longitude; },
-    e => setStatus(`<span class="err">❌ 定位失敗：${e.message}</span>`)
-  );
-} else {
-  setStatus('<span class="err">❌ 瀏覽器不支援定位</span>');
-}
-
-// ─── Render chips ──────────────────────────────────────────────────────────
+// ─── Chip render ───────────────────────────────────────────────────────────
 const chipsEl = document.getElementById('chips');
 CATS.forEach(c => {
   const el = document.createElement('div');
-  el.className = 'chip' + (selected.has(c.id) ? ' on' : '');
-  el.innerHTML = `<span class="chip-icon">${c.icon}</span><span class="chip-label">${c.label}</span>`;
+  el.className = 'chip' + (selectedTags.has(c.id) ? ' on' : '');
+  el.innerHTML = `<span class="chip-icon">${c.icon}</span>${c.label}`;
   el.addEventListener('click', () => {
-    selected.has(c.id) ? selected.delete(c.id) : selected.add(c.id);
-    el.classList.toggle('on');
+    if (c.id === 0) {
+      selectedTags.clear();
+      selectedTags.add(0);
+    } else {
+      selectedTags.delete(0);
+      selectedTags.has(c.id) ? selectedTags.delete(c.id) : selectedTags.add(c.id);
+      if (!selectedTags.size) selectedTags.add(0);
+    }
+    document.querySelectorAll('.chip').forEach((el, i) => {
+      el.classList.toggle('on', selectedTags.has(CATS[i].id));
+    });
+    renderList();
   });
   chipsEl.appendChild(el);
 });
 
-// ─── Search ────────────────────────────────────────────────────────────────
-document.getElementById('btn-search').addEventListener('click', async () => {
-  if (!lat) { setStatus('<span class="err">⚠️ 尚未取得定位，請允許位置存取</span>'); return; }
-  if (!selected.size) { setStatus('<span class="err">⚠️ 請至少選一種類型</span>'); return; }
-
-  const btn = document.getElementById('btn-search');
-  btn.disabled = true;
-  btn.textContent = '搜尋中…';
-  setStatus('<span class="spin-loader"></span>正在搜尋 Uber Eats 附近店家…');
-  stores = [];
-  renderList();
-  document.getElementById('btn-spin').disabled = true;
-  document.getElementById('result-line').textContent = '';
-
-  try {
-    const pl = encodePl(lat, lon);
-    const queries = [...selected].map(id => CATS.find(c => c.id === id).q);
-    const all = await Promise.all(queries.map(q => queryUberEats(pl, q)));
-
-    const seen = new Set();
-    for (const list of all) {
-      for (const s of list) {
-        const key = s.uuid || s.name;
-        if (!seen.has(key)) { seen.add(key); stores.push(s); }
-      }
-    }
-    stores.sort((a, b) => (a.dist ?? 1e9) - (b.dist ?? 1e9));
-
-    if (!stores.length) {
-      setStatus('⚠️ 10 公里內找不到符合店家，請嘗試其他類型');
-    } else {
-      setStatus('');
-      document.getElementById('btn-spin').disabled = false;
-    }
-    renderList();
-  } catch (e) {
-    console.error(e);
-    setStatus(`<div class="err-box">
-      ❌ 無法取得 Uber Eats 資料<br>
-      <small>${e.message}</small><br>
-      可能原因：CORS 限制、API 變更，或網路問題
-    </div>`);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '🔍 重新搜尋';
-  }
-});
-
-async function queryUberEats(pl, userQuery) {
-  const apiUrl = `https://www.ubereats.com/api/getSearchResultsV1?pl=${pl}`;
-  const proxyUrl = CORS_PROXY + encodeURIComponent(apiUrl);
-
-  const body = {
-    userQuery,
-    date: '', startTime: 0, endTime: 0,
-    targetLocation: {
-      address: { address1: '' },
-      latitude: lat, longitude: lon,
-      reference: '', referenceType: 'uber_places_poi'
-    }
-  };
-
-  const res = await fetch(proxyUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-csrf-token': 'x' },
-    body: JSON.stringify(body)
-  });
-
-  if (!res.ok) throw new Error(`Uber Eats 回應 HTTP ${res.status}`);
-  const data = await res.json();
-  return parseStores(data);
+// ─── Helpers ───────────────────────────────────────────────────────────────
+function activePool() {
+  const tagged = selectedTags.has(0)
+    ? STORES
+    : STORES.filter(s => selectedTags.has(s.tag));
+  return tagged.filter(s => !excluded.has(s.name));
 }
 
-function parseStores(data) {
-  // Handle multiple possible response shapes
-  const feed =
-    data?.data?.feedItems
-    ?? data?.data?.feed?.sections?.flatMap(s => s.items ?? [])
-    ?? data?.data?.storeSearchResults
-    ?? [];
-
-  const out = [];
-  for (const item of feed) {
-    // Direct store fields or nested under item.store / item.data.store
-    const s = item?.store ?? item?.data?.store
-      ?? (item?.title ? item : null);
-    if (!s) continue;
-
-    const name = s.title ?? s.name;
-    if (!name) continue;
-
-    const sLat = s.location?.latitude ?? s.latitude;
-    const sLon = s.location?.longitude ?? s.longitude;
-    const dist = (sLat && sLon) ? haversine(lat, lon, sLat, sLon) : null;
-    if (dist !== null && dist > MAX_KM * 1000) continue;
-
-    const cats = (s.categories ?? s.tags ?? [])
-      .map(c => (typeof c === 'string' ? c : c.name ?? '')).filter(Boolean);
-
-    out.push({
-      uuid: s.uuid ?? s.storeUUID ?? null,
-      name,
-      dist,
-      cats,
-      excluded: false
-    });
-  }
-  return out;
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// ─── Render list ───────────────────────────────────────────────────────────
+// ─── Store list ────────────────────────────────────────────────────────────
 function renderList() {
   const listEl = document.getElementById('store-list');
-  document.getElementById('cnt').textContent = stores.filter(s => !s.excluded).length;
+  const tagged = selectedTags.has(0)
+    ? STORES
+    : STORES.filter(s => selectedTags.has(s.tag));
+
+  document.getElementById('cnt').textContent = tagged.filter(s => !excluded.has(s.name)).length;
   listEl.innerHTML = '';
 
-  stores.forEach((s, i) => {
+  tagged.forEach(s => {
+    const isEx = excluded.has(s.name);
     const li = document.createElement('li');
-    li.className = 'sitem' + (s.excluded ? ' ex' : '');
-    const distTxt  = s.dist ? `${(s.dist/1000).toFixed(1)} km` : '';
-    const catsTxt  = s.cats.slice(0, 2).join('・');
-    const meta     = [distTxt, catsTxt].filter(Boolean).join('　');
+    li.className = 'sitem' + (isEx ? ' ex' : '');
+    const tagName = CATS.find(c => c.id === s.tag)?.label ?? '';
     li.innerHTML = `
       <div class="sinfo">
         <div class="sname">${esc(s.name)}</div>
-        ${meta ? `<div class="smeta">${esc(meta)}</div>` : ''}
+        <div class="smeta">${esc(tagName)}</div>
       </div>
-      <button class="btn-ex" data-i="${i}">${s.excluded ? '取消排除' : '排除'}</button>`;
+      <button class="btn-ex" data-name="${esc(s.name)}">${isEx ? '取消排除' : '排除'}</button>`;
     listEl.appendChild(li);
   });
 
   listEl.querySelectorAll('.btn-ex').forEach(btn => {
     btn.addEventListener('click', () => {
-      stores[+btn.dataset.i].excluded ^= true;
+      const name = btn.dataset.name;
+      excluded.has(name) ? excluded.delete(name) : excluded.add(name);
       renderList();
-      document.getElementById('btn-spin').disabled =
-        !stores.some(s => !s.excluded);
     });
   });
 }
 
-// ─── Slot machine ──────────────────────────────────────────────────────────
-const slotReel  = document.getElementById('slot-reel');
-const resultLine = document.getElementById('result-line');
-const btnSpin   = document.getElementById('btn-spin');
+document.getElementById('btn-reset').addEventListener('click', () => {
+  excluded.clear();
+  renderList();
+});
 
-btnSpin.addEventListener('click', () => {
+// ─── Slot machine ──────────────────────────────────────────────────────────
+const slotReel   = document.getElementById('slot-reel');
+const resultLine = document.getElementById('result-line');
+
+document.getElementById('btn-spin').addEventListener('click', () => {
   if (spinning) return;
-  const pool = stores.filter(s => !s.excluded);
-  if (!pool.length) return;
+  const pool = activePool();
+  if (!pool.length) {
+    resultLine.textContent = '⚠️ 沒有可用店家，請調整篩選';
+    return;
+  }
 
   spinning = true;
-  btnSpin.disabled = true;
   resultLine.textContent = '';
 
   const winner = pool[Math.floor(Math.random() * pool.length)];
-  const N = 30;
-  const items = Array.from({length: N - 1}, () => pool[Math.floor(Math.random() * pool.length)].name);
+  const N = 28;
+  const items = Array.from({ length: N - 1 }, () =>
+    pool[Math.floor(Math.random() * pool.length)].name
+  );
   items.push(winner.name);
 
   slotReel.style.transition = 'none';
@@ -502,35 +413,18 @@ btnSpin.addEventListener('click', () => {
   ).join('');
 
   const H = 82;
-  slotReel.getBoundingClientRect(); // force reflow
+  slotReel.getBoundingClientRect();
   slotReel.style.transition = `transform ${(N * 0.09).toFixed(1)}s cubic-bezier(0.12,0.88,0.3,1)`;
   slotReel.style.transform  = `translateY(${-(N - 1) * H}px)`;
 
   setTimeout(() => {
     resultLine.textContent = '🎉 ' + winner.name + ' 🎉';
     spinning = false;
-    btnSpin.disabled = false;
-  }, N * 90 + 300);
+  }, N * 90 + 400);
 });
 
-// ─── Helpers ───────────────────────────────────────────────────────────────
-function encodePl(lat, lon) {
-  const json = JSON.stringify({
-    address: '', reference: '', referenceType: 'uber_places_poi', latitude: lat, longitude: lon
-  });
-  return btoa(unescape(encodeURIComponent(json)))
-    .replace(/\+/g, '-').replace(/\//g, '_');
-}
-
-function haversine(a, b, c, d) {
-  const R = 6371000, r = Math.PI/180;
-  const dLat = (c-a)*r, dLon = (d-b)*r;
-  const x = Math.sin(dLat/2)**2 + Math.cos(a*r)*Math.cos(c*r)*Math.sin(dLon/2)**2;
-  return Math.round(R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x)));
-}
-
-function setStatus(html) { document.getElementById('status').innerHTML = html; }
-function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+// ─── Init ──────────────────────────────────────────────────────────────────
+renderList();
 </script>
 </body>
 </html>
